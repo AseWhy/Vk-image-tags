@@ -1,0 +1,7 @@
+{
+    "paths": {
+        "background": "index.js",
+        "popup": "index.html"
+    },
+    "distFolder": "dist"
+}
