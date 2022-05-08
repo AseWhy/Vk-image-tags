@@ -1082,28 +1082,58 @@ const VK_IMG_TAGS_NAME_EXTRACT = /(?:https|http):\/\/([^\/]+)([^?]+)/g;
 const VK_IMG_TAGS_CONT_CONT_TRIGGER = ".layer_wrap .clear_fix.pv_photo_wrap";
 const VI_IMG_TAGS_SEL_CONT_TRIGGER = "#box_layer_wrap #photos_choose_wrap";
 
-;// CONCATENATED MODULE: ./variants/chrome/src/background/config/ExtensionConfig.ts
+;// CONCATENATED MODULE: ./lib/support/ExtensionConfigField.ts
+class ExtensionConfigField {
+    constructor(name, def) {
+        this.name = name;
+        this.def = def;
+    }
+}
+
+;// CONCATENATED MODULE: ./lib/support/ExtensionConfig.ts
+
+const CONFIG_PREFIX = "_config_";
 /* harmony default export */ const ExtensionConfig = (new class ExtensionConfig {
     constructor() {
-        this.TagsSearchIntervalKey = "TagsSearchIntervalKey";
-        this.LoadAllItemWhenSearch = "LoadAllItemWhenSearch";
-        this.KeyGoToNextSelection = "KeyGoToNextSelection";
+        this.TagsSearchIntervalKey = new ExtensionConfigField("TagsSearchIntervalKey", 500);
+        this.LoadAllItemWhenSearch = new ExtensionConfigField("LoadAllItemWhenSearch", true);
+        this.KeyGoToNextSelection = new ExtensionConfigField("KeyGoToNextSelection", "Tab");
     }
-    getField(field, def) {
+    getField(field, def = null) {
+        const name = field instanceof ExtensionConfigField ? field.name : field;
+        const key = "_config_" + name;
         return new Promise((res, rej) => {
-            const key = "_config_" + field;
             chrome.storage.sync.get(key, items => {
-                var _a;
-                res((_a = items[key]) !== null && _a !== void 0 ? _a : def);
+                var _a, _b;
+                res((_b = (_a = items[key]) !== null && _a !== void 0 ? _a : def) !== null && _b !== void 0 ? _b : this[name].def);
+            });
+        });
+    }
+    getFields() {
+        const fields = this.getAllFieldSet();
+        return new Promise((res, rej) => {
+            chrome.storage.sync.get(fields.map(e => CONFIG_PREFIX + e), items => {
+                res(Object.fromEntries(fields.map(name => { var _a; return [name, (_a = items[CONFIG_PREFIX + name]) !== null && _a !== void 0 ? _a : this[name].def]; })));
             });
         });
     }
     setField(field, value) {
+        const name = field instanceof ExtensionConfigField ? field.name : field;
         return new Promise((res, rej) => {
-            chrome.storage.sync.set({ ["_config_" + field]: value }, () => {
+            chrome.storage.sync.set({ [CONFIG_PREFIX + name]: value }, () => {
                 res(undefined);
             });
         });
+    }
+    setValues(value) {
+        return new Promise((res, rej) => {
+            chrome.storage.sync.set(Object.fromEntries(Object.entries(value).map(e => [CONFIG_PREFIX + e[0], e[1]])), () => {
+                res(undefined);
+            });
+        });
+    }
+    getAllFieldSet() {
+        return Object.entries(this).filter(([key, value]) => value instanceof ExtensionConfigField).map(e => e[0]);
     }
 }());
 
@@ -1231,7 +1261,7 @@ class FilterImagesController {
         this._setuped = true;
         const wrapper = document.getElementById(FilterImagesController.VK_BOX_LAYER_WRAPPER);
         wrapper.addEventListener("keydown", (event) => __awaiter(this, void 0, void 0, function* () {
-            if (event.code == (yield ExtensionConfig.getField(ExtensionConfig.KeyGoToNextSelection, "Tab"))) {
+            if (event.code == (yield ExtensionConfig.getField(ExtensionConfig.KeyGoToNextSelection))) {
                 event.preventDefault();
                 this.selectNextActive();
             }
@@ -1276,7 +1306,7 @@ class FilterImagesController {
      */
     loadMoreWrapper() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (yield ExtensionConfig.getField(ExtensionConfig.LoadAllItemWhenSearch, true)) {
+            if (yield ExtensionConfig.getField(ExtensionConfig.LoadAllItemWhenSearch)) {
                 const result = yield this.loadMore();
                 console.log("Loading more images to filter", result);
                 return result;
@@ -1491,13 +1521,13 @@ var TagsSearchLiveCont_awaiter = (undefined && undefined.__awaiter) || function 
                 inner.onSearch(search.trim());
                 this._oldTimer = setTimeout(() => {
                     this._oldTimer = null;
-                }, yield ExtensionConfig.getField(ExtensionConfig.TagsSearchIntervalKey, 500));
+                }, yield ExtensionConfig.getField(ExtensionConfig.TagsSearchIntervalKey));
             }
             if (search != null) {
                 this._oldTimer = setTimeout(() => {
                     this._oldTimer = null;
                     inner.onSearch(search.trim());
-                }, yield ExtensionConfig.getField(ExtensionConfig.TagsSearchIntervalKey, 500));
+                }, yield ExtensionConfig.getField(ExtensionConfig.TagsSearchIntervalKey));
             }
         });
     }

@@ -13,7 +13,7 @@ module.exports = (common) => [
     }),
     Object.assign({}, common, {
         name: "pupup",
-        entry: path.join(__dirname, "src/popup/index.ts"),
+        entry: path.join(__dirname, "src/popup/index.tsx"),
         plugins: [
             new HtmlWebpackPlugin({
                 template: path.join(__dirname, 'src/popup/index.html')
@@ -21,6 +21,18 @@ module.exports = (common) => [
         ],
         output: {
             path: path.resolve(__dirname, buildmap.distFolder, 'popup'),
+        }
+    }),
+    Object.assign({}, common, {
+        name: "options",
+        entry: path.join(__dirname, "src/options/index.tsx"),
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'src/options/index.html')
+            }),
+        ],
+        output: {
+            path: path.resolve(__dirname, buildmap.distFolder, 'options'),
         }
     })
 ];

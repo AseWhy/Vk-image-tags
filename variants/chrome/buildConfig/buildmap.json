@@ -1,7 +1,8 @@
 {
     "paths": {
         "background": "index.js",
-        "popup": "index.html"
+        "popup": "index.html",
+        "options": "index.html"
     },
     "distFolder": "dist"
 }

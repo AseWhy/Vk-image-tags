@@ -1,5 +1,5 @@
 import { HtmlLiveCont } from ".";
-import ExtensionConfig from "../config/ExtensionConfig";
+import ExtensionConfig from "../../../../../lib/support/ExtensionConfig";
 
 import "./styles/tags-live-search.css";
 
@@ -29,14 +29,14 @@ export default new class TagsSearchLiveCont extends HtmlLiveCont<IInnerData> {
 
             this._oldTimer = setTimeout(() => {
                 this._oldTimer = null;
-            }, await ExtensionConfig.getField(ExtensionConfig.TagsSearchIntervalKey, 500));
+            }, await ExtensionConfig.getField(ExtensionConfig.TagsSearchIntervalKey));
         }
 
         if(search != null) {
             this._oldTimer = setTimeout(() => {
                 this._oldTimer = null;
                 inner.onSearch(search.trim());
-            }, await ExtensionConfig.getField(ExtensionConfig.TagsSearchIntervalKey, 500));
+            }, await ExtensionConfig.getField(ExtensionConfig.TagsSearchIntervalKey));
         }
     }
 

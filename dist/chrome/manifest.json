@@ -2,6 +2,7 @@
   "manifest_version": 2,
   "name": "Vk image tags",
   "description": "Добавляейте теги для быстрого поиска по картинкам в вк!",
+  "options_page": "options/index.html",
   "version": "0.0.1",
   "icons": {
     "64": "icon.png"

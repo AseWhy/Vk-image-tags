@@ -1,4 +1,4 @@
-import ExtensionConfig from "../config/ExtensionConfig";
+import ExtensionConfig from "../../../../../lib/support/ExtensionConfig";
 import { Store } from "../database";
 
 export class FilterImagesController {
@@ -55,7 +55,7 @@ export class FilterImagesController {
         const wrapper = document.getElementById(FilterImagesController.VK_BOX_LAYER_WRAPPER);
 
         wrapper.addEventListener("keydown", async event => {
-            if(event.code == await ExtensionConfig.getField(ExtensionConfig.KeyGoToNextSelection, "Tab")) {
+            if(event.code == await ExtensionConfig.getField(ExtensionConfig.KeyGoToNextSelection)) {
                 event.preventDefault();
                 this.selectNextActive();
             }
@@ -105,7 +105,7 @@ export class FilterImagesController {
      * @returns обещание, true обозначает что все что нужно было уже загружено
      */
     protected async loadMoreWrapper() {
-        if(await ExtensionConfig.getField(ExtensionConfig.LoadAllItemWhenSearch, true)) {
+        if(await ExtensionConfig.getField(ExtensionConfig.LoadAllItemWhenSearch)) {
             const result = await this.loadMore();
 
             console.log("Loading more images to filter", result);

@@ -1,0 +1,27 @@
+form {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+form button {
+    width: fit-content;
+    margin: auto !important;
+}
+
+form button[type="submit"] {
+    margin-top: 0.5rem !important;
+}
+
+html, body, #app, .application-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+.settings-page-container {
+    width: fit-content;
+    margin: auto;
+}
